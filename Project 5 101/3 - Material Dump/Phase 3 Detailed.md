@@ -1,114 +1,154 @@
-# Phase 3 – Tech Blueprint (Overkill, No Flowcharts)
+# Phase 3 – Tech Blueprint (Overkill Mode)
 
-## **🎯 Objective**
+## **1. Tech Stack – Optimized for Speed + Stability**
 
-We’re building a tech setup so stable that no matter how beginner the devs are, they can’t accidentally nuke the repo or block progress.  
-By the end of this phase:
+We’re not experimenting with fancy untested stuff. We’re picking **battle-tested tools** so we can move fast without debugging frameworks all weekend.
 
-- The **stack** is final and justified.
-- The **architecture** is described in words so everyone understands data flow.
-- Team roles are laser-defined.
-- Git workflow is strict enough to prevent merge hell.
-- Daily dev process is locked.
-
----
-
-## **1. Tech Stack (Locked & Justified)**
-
-| Layer            | Choice                                                                             | Why This Choice Rocks                                                                         | Backup Option        |
-| ---------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | -------------------- |
-| **Frontend**     | **React.js + Tailwind CSS**                                                        | Rapid component-based dev, huge community, Tailwind for instant styling without CSS headaches | Vue.js + Vuetify     |
-| **Backend**      | **Node.js + Express.js**                                                           | Minimal boilerplate, fast iteration, runs anywhere, beginner-friendly                         | Python + FastAPI     |
-| **Database**     | **PostgreSQL via Supabase**                                                        | SQL familiarity, hosted service, built-in authentication, free tier                           | Firebase Firestore   |
-| **Auth**         | Supabase Auth                                                                      | Secure, integrated with DB, supports OAuth and email/password instantly                       | Firebase Auth        |
-| **File Storage** | Supabase Storage                                                                   | Integrated with Supabase auth & DB                                                            | AWS S3 (if advanced) |
-| **Hosting**      | Frontend: Vercel                                                                   | One-click deploy, auto CI/CD from GitHub                                                      | Netlify              |
-|                  | Backend: Render                                                                    | Free tier, quick Node deployment, no config headaches                                         | Railway              |
-| **Collab Tools** | GitHub (code), Figma (UI/UX), Postman (API testing), Notion/Trello (task tracking) | Jira (if needed)                                                                              |                      |
-
-💡 **Rule for tools:** If it takes >30 mins to set up or learn, we skip it.
-
----
-
-## **2. Architecture (Text-Only Explanation)**
-
-Our system will work like this:
-
-- **Frontend** (React + Tailwind) will handle all user interaction — forms, buttons, displays, visualizations. It will never directly touch the database.
-- **Backend** (Node + Express) will be the “traffic cop,” receiving requests from the frontend, validating inputs, running business logic, and querying the database.
-- **Database** (PostgreSQL/Supabase) stores all persistent data — user accounts, uploaded files, search results, logs.
-- **Auth Service** (Supabase Auth) ensures only verified users can access features, keeping roles (user/admin) separate.
-- **File Storage** (Supabase Storage) handles uploaded documents/media, linked to user accounts.
-- **External APIs** (if needed) will be fetched only by the backend to avoid exposing keys.
-- The **data flow** will always be → **Frontend → Backend → Database/API → Backend → Frontend**. No shortcuts.
-
----
-
-## **3. Team Roles (Zero Overlap)**
-
-|Role|Responsibilities|Tools|
+|Layer|Choice|Reason|
 |---|---|---|
-|**Frontend Lead**|Builds all UI pages/components, integrates API calls, styles with Tailwind, handles responsive design|React, Tailwind, Axios|
-|**Backend Lead**|Creates API routes, handles DB queries, sets up middleware, manages data validation|Node, Express, Supabase|
-|**UI/UX Designer**|Creates wireframes, prototypes, style guide, ensures user flow is intuitive|Figma|
-|**DevOps/Tester**|Sets up hosting, manages environment variables, configures CI/CD, runs integration tests|Vercel, Render, GitHub Actions|
-|**Documentation Lead**|Writes README, API reference, user manual, and demo guide|Markdown, Notion|
-
-💡 **Golden Rule:** No two people work on the same file unless they’re pair programming.
+|**Frontend**|**React + Vite**|Fast dev server, hot reload, easy to split components, works for beginners|
+|**UI Library**|**TailwindCSS**|No CSS hell, quick prototypes|
+|**Backend API**|**FastAPI (Python)**|Async support, beginner-friendly, integrates with ML easily|
+|**Search/NLP**|**Sentence Transformers (all-MiniLM-L6-v2)**|Lightweight, fast, good semantic quality|
+|**Vector DB**|**FAISS** (local)|No external dependency risk, blazing fast search|
+|**Data Store**|**SQLite** (for structured data)|Lightweight, zero-config|
+|**Voice Input** (optional later)|**Vosk** (offline) or Google STT|Works offline for MVP if needed|
+|**Multilingual** (optional later)|**IndicBERT + IndicTrans2**|Native support for Indian languages|
+|**Deployment**|**Docker** + Railway/Render (cloud)|Containerized, zero “works on my machine” drama|
+|**Version Control**|**GitHub**|Free CI/CD, easy PR workflow|
 
 ---
 
-## **4. Git & Branching Strategy**
+## **2. System Architecture**
 
-We’ll use **GitHub Flow with an integration branch**:
+### **Flow Overview**
 
-- `main` → Stable, production-ready code for demos.
-- `dev` → Integration branch where all tested features go before merging to `main`.
-- `feature/<feature-name>` → Each feature/task gets its own branch.
-    - Example: `feature/auth-system`, `feature/file-upload`, `feature/data-visualization`
+1. **Data Ingestion Pipeline**
+    
+    - Admin uploads CSV/JSON of NCO data → ingestion script cleans + normalizes → generate embeddings → store in FAISS + SQLite.
+        
+2. **Query Handling**
+    
+    - User sends query (text or later voice) → preprocessing (lowercase, normalize, remove stopwords) → embeddings generated → FAISS similarity search → results with confidence scores → map to NCO hierarchy → send to frontend.
+        
+3. **Frontend**
+    
+    - Search bar → result cards with code, title, sector, confidence.
+        
+    - Minimal but judge-friendly UI with emphasis on **speed**.
+        
+
+---
+
+### **Architecture Diagram (Text Form)**
+
+```
+[User Browser] 
+    ↓ (search query)
+[React + Tailwind UI] 
+    ↓ REST API request (JSON)
+[FastAPI Backend]
+    ├── [Preprocessing Module]
+    ├── [Embedding Generator - Sentence Transformers]
+    ├── [Vector DB - FAISS] → returns top matches
+    └── [SQLite DB] → fetch hierarchical metadata
+    ↓
+[JSON Response with results + confidence]
+    ↓
+[Frontend Renders Ranked List]
+```
+
+---
+
+## **3. Branching Strategy – Chaos Prevention**
+
+We’re running a **feature-branch model** with strict PR rules.
+
+|Branch|Purpose|
+|---|---|
+|`main`|Always deploy-ready, protected branch|
+|`dev`|Integration branch, merges from feature branches|
+|`feature/*`|One branch per feature (e.g., `feature/frontend-search`)|
+|`hotfix/*`|Urgent bug fixes from `main`|
 
 **Rules:**
 
-1. Always pull the latest `dev` before starting a feature.
-2. Commit small changes with descriptive messages.
-3. No direct commits to `main` or `dev`.
-4. At least **one code review** before merging to `dev`.
-5. Merge to `main` only after MVP milestone testing.
+- No direct commits to `main`.
+    
+- PR → Code Review → Merge to `dev` → Tested → Merge to `main`.
+    
+- Beginners get “safe” tasks with **mentored PR reviews**.
+    
 
 ---
 
-## **5. Development Workflow**
+## **4. Development Workflow – No Merge Wars**
 
-**Daily Flow:**
-
-1. **Morning standup** (10 min): What was done yesterday, what’s next, blockers.
-2. Pick tasks from Notion/Trello — every task must have:
-    - A short title
-    - Owner
-    - Due date
-    - Subtasks
-3. Work in short cycles — commit every 1–2 hours.
-4. Push code daily to avoid losing progress.
-5. End-of-day mini sync (optional) for merging PRs.
-
-**Testing Before Merge:**
-
-- **Backend:** Test all endpoints with Postman (happy + edge cases).
-- **Frontend:** Click through UI, check forms, buttons, and error messages.
-- **Integration:** Run through the core user flow at least once after merging to `dev`.
-
-**Safety Practices:**
-
-- `.env` file for all secrets (never committed).
-- Use **mock APIs/data** if real API isn’t ready yet.
-- Keep a **demo-ready branch** at all times so a crash doesn’t kill our pitch.
+1. **Task assigned** → Create feature branch (`feature/<name>`).
+    
+2. Commit often, push daily.
+    
+3. Pull latest `dev` before pushing to avoid conflicts.
+    
+4. Test locally before PR.
+    
+5. One person merges PR after review.
+    
 
 ---
 
-✅ **Phase 3 Overkill (No Flowcharts) Summary:**
+## **5. Team Role Allocation**
 
-- Beginner-proof stack with instant deploy capability.
-- Clear text-based architecture description.
-- Roles assigned to avoid collisions.
-- Strict Git rules to prevent repo disasters.
-- Daily workflow to keep progress consistent and transparent.
+We split by skill and dependencies to avoid idle waiting.
+
+|Role|Person|Main Tasks|
+|---|---|---|
+|**Backend Lead**|Strongest Python dev|FastAPI setup, NLP pipeline, FAISS integration|
+|**Frontend Lead**|React/Tailwind expert|Search UI, result display|
+|**Data Engineer**|Someone patient|Parse NCO-2015 dataset, create JSON/CSV|
+|**ML/NLP Engineer**|Good with Python + ML libs|Embedding model integration, synonym handling|
+|**Beginner Dev 1**|Learner|Write basic API routes, handle UI forms|
+|**Beginner Dev 2**|Learner|Implement result card components|
+|**QA / Tester**|Detail-oriented|Test MVP features, record bugs, manage demo data|
+|**Project Manager**|Me + You|Oversee progress, unblock, keep repo clean|
+
+---
+
+## **6. Testing Workflow**
+
+- **Unit tests** for backend functions (search, data parsing).
+    
+- **Smoke test** every morning on dev branch.
+    
+- **Manual functional test** before merging to main.
+    
+- Use **Postman** for API endpoint testing.
+    
+- Use **sample queries** like:
+    
+    - "tailor"
+        
+    - "mechanic for bikes"
+        
+    - misspelled: "mechnic"
+        
+    - contextual: "garment stitcher"
+        
+
+---
+
+## **7. Beginner-Friendly Safety Nets**
+
+- Pre-configured `.devcontainer` or Docker so no one spends hours on setup.
+    
+- Starter scripts for running backend (`run_backend.sh`) and frontend (`run_frontend.sh`).
+    
+- `README.md` with **copy-paste commands**.
+    
+- A **data subset** for local testing (no heavy downloads needed).
+    
+
+---
+
+✅ **Phase 3 Deliverable:**  
+We now have the **stack locked**, **architecture mapped**, **roles assigned**, **workflow enforced**, and **merge chaos prevention plan** ready. Everyone knows exactly what they’re doing and where their code lives.

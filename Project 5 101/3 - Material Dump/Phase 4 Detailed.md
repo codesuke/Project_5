@@ -1,85 +1,84 @@
-# Phase 4 – MVP Plan (Overkill)
+# Phase 4 – MVP Plan
 
-## 🎯 **Objective**
+## **1. MVP Scope (Locked from Phase 2)**
 
-The MVP must be **fully functional by Week 5** — no excuses — so the last 3 weeks are for polish, wow-factor features, bug fixes, and demo prep.  
-We’re building **in parallel**, not in a slow linear sequence.
+We only build what’s essential for the demo:
 
----
+- ✅ **English text search** (job title/description → NCO code)
+- ✅ **Semantic search via embeddings**
+- ✅ **Synonym handling**
+- ✅ **Ranked results + confidence scores**
+- ✅ **Typos & fuzzy matching**
+- ✅ **Data ingestion pipeline**
+- ✅ **Hierarchical NCO display**
+- ✅ **Basic, clean UI**    
 
-## **1. Week-by-Week Timeline**
-
-|Week|Goal|Deliverables|Parallel Streams|
-|---|---|---|---|
-|**Week 1**|Kickoff & Scaffolding|- GitHub repo set up with `main` + `dev` + branches- Frontend React/Tailwind skeleton- Backend Node/Express skeleton- Database & Supabase project created- Auth system basic setup|- Frontend: Build header, footer, layout- Backend: Hello World API route- DevOps: Hosting connected to `dev` branch|
-|**Week 2**|Core System Foundations|- Authentication flow (sign up/login/logout)- Database tables for users/data- File upload API (backend only)|- Frontend: Login/register pages- Backend: API for auth & upload- Testing: Postman tests for each endpoint|
-|**Week 3**|Core Data Handling|- Upload connected to DB- Search API built- Display basic search results in frontend|- Backend: Search endpoints- Frontend: Search page UI + call API- DevOps: Basic logging/monitoring|
-|**Week 4**|Visualization Layer|- Backend returns aggregated data for charts- Frontend renders charts/tables|- UI/UX: Style dashboard- Backend: Optimize DB queries- Testing: Verify data consistency|
-|**Week 5**|**MVP Freeze**|- Full end-to-end flow works:Auth → Upload → Search → Visualization- Deployed version running|- Documentation: README + API docs- Demo-ready stable branch created|
-|**Week 6**|Nice-to-Have Features|- Implement OC1 (Advanced Search Filters)- Add error handling & UI polish|- Frontend: Loading states, error messages- Backend: Input validation, API error handling|
-|**Week 7**|Wow Factor + Polish|- Add OC4 (Multi-format export)- Add micro-interactions in UI- Prepare final dataset for judging|- Stress testing & performance tuning|
-|**Week 8**|Demo Prep|- Script final demo- Record fallback demo video- Prepare slides- Full dry-run|- QA: Test every feature end-to-end- Create backup database & deployment|
+Everything else (voice, multilingual, dashboards, advanced filters) is **post-MVP/wow-phase**.
 
 ---
 
-## **2. Milestone Checkpoints**
+## **2. Development Timeline (2-Month Hackathon)**
 
-We don’t wait for “later” to discover something’s broken.  
-At each checkpoint:
-
-- **Functional test** (user flow works)
-    
-- **Code quality check** (no commented-out junk, linted)
-    
-- **Deployment check** (live version matches local)
-    
-
-|Milestone|Deadline|What’s Tested|
-|---|---|---|
-|**M1 – Scaffold Done**|End of Week 1|Repo, hosting, skeleton apps|
-|**M2 – Auth Working**|Mid-Week 2|Login/register flow works live|
-|**M3 – Upload + DB**|End of Week 3|File upload saves to DB/storage|
-|**M4 – Search Live**|Mid-Week 4|Queries return correct results|
-|**M5 – MVP Freeze**|End of Week 5|Full flow live & stable|
+| Week       | Goal                        | Tasks                                                                                                         | Owner(s)                   |
+| ---------- | --------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| **Week 1** | **Kickoff + Setup**         | Repo creation, branching rules, Docker dev env, assign roles, import NCO dataset sample                       | All                        |
+| **Week 2** | **Data Ingestion Pipeline** | Parse dataset, clean, normalize, store in SQLite, generate embeddings (Sentence Transformers), index in FAISS | Data Eng + ML Eng          |
+| **Week 3** | **Backend Search API**      | Build FastAPI endpoints: `/search` (semantic), `/ingest` (admin)                                              | Backend Lead               |
+| **Week 4** | **Frontend Search UI**      | React + Tailwind search bar, result cards, loading states                                                     | Frontend Lead + Beginner 1 |
+| **Week 5** | **Synonym + Fuzzy Match**   | Integrate synonyms dict & fuzzy search fallback                                                               | ML Eng + Backend Lead      |
+| **Week 6** | **End-to-End Integration**  | Frontend → Backend → FAISS → SQLite → Frontend results                                                        | All                        |
+| **Week 7** | **Testing & Bug Fixes**     | Unit tests, functional tests, fix UI bugs, performance tuning                                                 | QA + All                   |
+| **Week 8** | **Demo-Readiness**          | Seed with test queries, add styling polish, prepare demo script                                               | Frontend Lead + PMs        |
 
 ---
 
-## **3. Parallel Work Streams (So We Don’t Bottleneck)**
+## **3. Parallel Work Streams**
 
-- **Stream 1 – Frontend:** Build pages with dummy data, integrate APIs when backend is ready.
-    
-- **Stream 2 – Backend:** Build API routes with mock responses, connect DB later.
-    
-- **Stream 3 – UI/UX:** Work in Figma from Day 1, keep updating designs.
-    
-- **Stream 4 – Testing/DevOps:** Deploy early, test every merge, keep `dev` live at all times.
-    
+To avoid idle time:
 
-💡 **Rule:** If you’re blocked waiting for another team, you **switch to another feature or testing** — no idle time.
+- **Stream 1:** Data pipeline (Data Eng + ML Eng) → starts immediately with dataset extraction.
+- **Stream 2:** Frontend scaffolding (Frontend Lead + Beginner Devs) → can work with mock API while backend is in progress.    
+- **Stream 3:** Backend API (Backend Lead) → can test with fake embeddings until real pipeline ready.
+
 
 ---
 
-## **4. Demo-Readiness Strategy**
+## **4. Demo-Readiness Checkpoints**
 
-We prep for the demo **as early as Week 5**, not the night before:
+We do **three hard checkpoints** to make sure we’re not blindsided:
 
-- Keep a **demo branch** that’s always working.
-    
-- Record a **backup video demo** in Week 7 in case the live app dies.
-    
-- Demo flow: Problem → Solution → Live demo → Impact → Wow feature.
-    
+1. **Checkpoint Alpha (Week 4)** – Frontend + mock backend connected.    
+2. **Checkpoint Beta (Week 6)** – Full end-to-end working with real data.
+3. **Checkpoint Gamma (Week 8)** – Fully tested, styled, and demo script rehearsed.    
 
 ---
 
-✅ **Phase 4 Output:**
+## **5. Repo Management & Conflict Avoidance**
 
-- MVP done by Week 5 guaranteed.
-    
-- Risk of “last week coding all night” eliminated.
-    
-- Parallel work to keep beginners productive.
-    
-- Demo prep baked into the schedule.
-    
+- Use **GitHub Projects** for Kanban board: Backlog → In Progress → Done.
+- Assign tasks clearly so no one touches the same file without coordination.
+- PR review mandatory before merge to `dev`.
+- Freeze `dev` one week before demo — only bug fixes allowed.    
 
+---
+
+## **6. Testing Workflow**
+
+- **Daily Smoke Test:** Run standard set of queries every morning.
+- **Unit Tests:** For search logic, synonym matching, and fuzzy matching.
+- **Manual UI Test:** Check for rendering errors, broken buttons, slow responses.
+- Keep a **test dataset** small enough to run searches instantly during demos.    
+
+---
+
+## **7. Emergency Backup Plan**
+
+If embeddings or FAISS integration breaks near deadline:
+
+- Fallback to **keyword search** + synonyms + fuzzy matching.
+- Still gives decent search and keeps project functional for judges.    
+
+---
+
+✅ **Phase 4 Deliverable:**  
+We now have a **timeboxed, dependency-aware plan** with parallel work streams, early integration, and judge-focused checkpoints. We will be MVP-ready **at least a week before demo day**.

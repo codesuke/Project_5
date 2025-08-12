@@ -1,74 +1,88 @@
-## Phase 1 – Extraction
+# **Phase 1 – Extraction**
 
-### **1. Plain English Problem Statement**
+## **1. Problem in One Sentence**
 
-We are tasked with creating a system that addresses the needs outlined in the provided use cases, ensuring that the platform is **functional, intuitive, and efficient**. It must allow users and administrators to perform their specific actions seamlessly while leveraging available APIs/data sources to deliver meaningful results.
+We need to build an **AI-powered semantic search tool** that lets users quickly find the right NCO occupation code from NCO-2015 using **natural language queries**, with multilingual and voice support, plus an admin interface for data updates.
 
 ---
 
-### **2. Core Use Cases (MUST-HAVE for MVP)**
+## **2. Core Use Cases (Must-Have)**
 
-|ID|Use Case|Actor(s)|Trigger|Outcome|
+|#|Use Case|Actor|Trigger|Outcome|
 |---|---|---|---|---|
-|UC1|**User Registration & Authentication**|User|Signs up or logs in|User is securely authenticated and can access system features|
-|UC2|**Data Upload & Storage**|User|Uploads data file|Data is validated and stored for processing|
-|UC3|**Data Search & Retrieval**|User|Enters query|Relevant data is fetched and displayed|
-|UC4|**Data Visualization**|User|Requests report|Data is shown in charts, graphs, or summaries|
-|UC5|**Admin Data Management**|Admin|Updates/deletes records|System reflects changes for all users|
+|1|Search by job title in English|Enumerator / Officer|User types "tailor"|Returns top matching codes with confidence scores|
+|2|Search by detailed job description|Enumerator / Officer|User types "repairs scooter engines"|Returns relevant occupation codes|
+|3|Handle synonyms/context|System|User types "sewing worker"|Finds "Sewing Machine Operator"|
+|4|Show ranked results|System|After search query|Top N results sorted by relevance|
+|5|Handle typos & ambiguous queries|System|User types "mechnic"|Shows corrected search or close matches|
+|6|Data ingestion & indexing|Admin|Uploads NCO dataset|Data processed and embeddings generated|
+|7|Admin updates database|Admin|Adds new occupation|Search updated automatically|
+|8|Display hierarchical structure|System|Search result found|Show code with sector/division/sub-group info|
+|9|Confidence score display|System|After search|User sees “confidence: 0.92”|
+|10|Basic UI|Enumerator / Officer|Open app|Search box, result list, and selection option|
 
 ---
 
-### **3. Optional Use Cases (Nice-to-Have)**
+## **3. Optional / Wow-Factor Use Cases**
 
-|ID|Feature|Actor(s)|Benefit|
+|#|Feature|Actor|Outcome|
 |---|---|---|---|
-|OC1|Advanced Search Filters|User|Improves result accuracy and speed|
-|OC2|Real-time Collaboration|User|Multiple users can work simultaneously|
-|OC3|Predictive Analytics|User/Admin|Adds AI-based insights|
-|OC4|Multi-format Export|User|PDF/CSV/Excel export for reports|
+|1|Multilingual text search|User|Search in Hindi/regional language|
+|2|Voice input search|User|Speak job title, get result|
+|3|Offline mode|User|Search works without internet|
+|4|Synonym bank editor|Admin|Update/add synonym mappings|
+|5|Usage dashboard|Admin|See query stats, top searched jobs|
+|6|Advanced filters|User|Filter by sector, skill level, location relevance|
+|7|Contextual suggestions|System|Suggest related roles|
 
 ---
 
-### **4. Actor / Trigger / Outcome Map**
+## **4. Actors – Role Mapping**
 
-|Actor|Trigger|Outcome|
-|---|---|---|
-|**User**|Interacts with UI|Executes core functions like upload, search, visualize|
-|**Admin**|Performs data operations|Updates system content|
-|**System**|Scheduled or user-triggered event|Automates tasks or fetches data|
-|**API/Data Source**|Receives backend request|Returns data for processing|
-
----
-
-### **5. Required Data / APIs / Tools**
-
-- **Data Sources:** Provided hackathon dataset + public APIs relevant to domain  
-- **APIs:** RESTful endpoints for all backend interactions  
-    
-- **Tools:**
-    - **Frontend:** React.js + Tailwind CSS  
-    - **Backend:** Node.js + Express.js  
-    - **Database:** PostgreSQL (or Firebase for speed)  
-    - **Deployment:** Vercel (frontend), Render (backend)  
-    - **Collaboration:** GitHub, Figma, Postman  
-
+|Actor|Responsibility|
+|---|---|
+|Enumerator|Query system for codes during surveys|
+|Employment Officer|Lookup codes for official records|
+|Admin|Upload/update dataset, manage synonyms, view logs|
+|System|Process NLP queries, return ranked results, manage embeddings|
 
 ---
 
-### **6. Clarification Questions for Mentors**
+## **5. Triggers**
 
-1. Are we free to integrate additional public APIs if they enhance functionality?
-2. Is there a preferred hosting/deployment method for judging?
-3. Do we need offline support or is online-only acceptable?
-4. Are there any restrictions on third-party libraries?
-5. What is the maximum data size we need to handle?
+- **User Action**: Typing job title/description
+- **User Action**: Speaking into mic
+- **Admin Action**: Uploading new dataset
+- **System Event**: New model version deployed
+- **Error Handling Trigger**: Query returns no results
 
 ---
 
-✅ **Phase 1 Deliverables Complete:**
+## **6. Outcomes**
 
-- Fully clarified scope  
-- Concrete MVP features + extras  
-- Clear actor/trigger/outcome mapping  
-- Tools and APIs identified  
-- Mentor questions ready for day one
+- **Direct**: Fast, accurate occupation code lookup    
+- **Indirect**: Reduced training time, improved classification accuracy, higher survey efficiency
+
+---
+
+## **7. Required Data & APIs**
+
+|Need|Example / Option|
+|---|---|
+|NCO-2015 structured dataset|CSV, JSON, or extracted from PDF|
+|NLP embedding model|BERT, IndicBERT, Sentence Transformers|
+|Vector store|FAISS, Pinecone, Weaviate|
+|Voice recognition|Google Speech-to-Text, Vosk|
+|Translation|IndicTrans2, Google Translate|
+|Web framework|Flask/FastAPI (backend), React/Vue (frontend)|
+
+---
+
+## **8. Clarification Questions for Mentors**
+
+1. Can we store embeddings in **cloud DBs** like Pinecone, or must it be offline?
+2. Is voice/multilingual a **must for MVP** or later?
+3. Are there **UI constraints** (mobile-only, web, kiosk)?
+4. Any **security/compliance** requirements for storing queries?
+5. What’s the **max dataset size** we need to handle?
+6. Should the **confidence score threshold** be configurable?    

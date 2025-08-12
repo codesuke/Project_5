@@ -1,66 +1,90 @@
-# Phase 2 – Deep Analysis (Finalized)
+# Phase 2 – Deep Analysis
 
-### **1. Impact vs. Effort Matrix**
+## **1. Impact vs. Effort Analysis**
 
-**Legend:**
-- **Impact:** 1 (low) → 5 (high) — how much value it brings to solving the problem & impressing judges.
-- **Effort:** 1 (low) → 5 (high) — how hard/time-consuming it is to implement.
+Here’s a quick prioritization so beginners don’t drown and we still deliver something impressive.
 
-|ID|Feature|Impact|Effort|Priority|Notes|
-|---|---|---|---|---|---|
-|UC1|User Registration & Authentication|5|2|**P1**|Must-have for controlled access|
-|UC2|Data Upload & Storage|5|3|**P1**|Core to platform functionality|
-|UC3|Data Search & Retrieval|5|3|**P1**|Directly tied to usability|
-|UC4|Data Visualization|4|3|**P1**|Increases clarity & appeal in demo|
-|UC5|Admin Data Management|3|2|P2|Needed for maintainability, can be built after MVP|
-|OC1|Advanced Search Filters|4|3|P2|Adds polish, but MVP can work without it|
-|OC2|Real-time Collaboration|3|5|**Kill for MVP**|High effort, not core|
-|OC3|Predictive Analytics|4|5|**Kill for MVP**|Nice but risky under time constraints|
-|OC4|Multi-format Export|3|3|P3|Post-MVP bonus feature|
+|Feature|Impact|Effort|Notes / Risks|Decision|
+|---|---|---|---|---|
+|English text search|High|Low|Simple input, embedding search|✅ Must-have|
+|Semantic understanding via embeddings|High|Medium|Pre-trained models are available; just integrate|✅ Must-have|
+|Synonym/context handling|High|Medium|Can start with static mapping, expand later|✅ Must-have|
+|Ranked results + confidence score|High|Low|Easy once embeddings work|✅ Must-have|
+|Data ingestion & indexing|High|Medium|One-time script + periodic updates|✅ Must-have|
+|Typos & fuzzy matching|Medium|Low|Use string similarity fallback|✅ Must-have|
+|Hierarchical code display|Medium|Low|Display from dataset structure|✅ Must-have|
+|Multilingual search|High|Medium-High|Requires translation or multilingual model|🔄 Later phase if time|
+|Voice input|Medium|Medium|Speech-to-text integration|🔄 Later phase if time|
+|Admin panel for updates|Medium|Medium-High|Build after core search is stable|🔄 Later phase|
+|Usage dashboard|Low|Medium|Not essential for MVP|❌ Drop for hackathon|
+|Advanced filters|Low|Medium|Feature creep risk|❌ Drop for hackathon|
+|Contextual suggestions|Medium|Medium|Can be phase 2 after MVP|🔄 Later|
 
 ---
 
-### **2. Dependencies**
+## **2. Kill / Postpone Risky Features**
 
-|Feature|Depends On|
+**Kill for Hackathon:**
+
+- Usage dashboard (low judge value vs. time sink)
+    
+- Complex advanced filters (overkill for MVP)
+    
+
+**Postpone to Post-MVP/Wow phase:**
+
+- Multilingual
+    
+- Voice input
+    
+- Contextual suggestions
+    
+- Full-featured admin panel
+    
+
+---
+
+## **3. Dependencies Mapping**
+
+|Feature|Dependencies|
 |---|---|
-|UC2 Data Upload & Storage|UC1 Authentication|
-|UC3 Data Search & Retrieval|UC2 Data Upload & Storage|
-|UC4 Data Visualization|UC3 Data Search & Retrieval|
-|OC1 Advanced Search|UC3 Data Search & Retrieval|
-|OC3 Predictive Analytics|UC2, UC3, OC1|
-|OC4 Export Reports|UC4 Visualization|
+|Semantic search|NCO dataset cleaned + embeddings + vector DB|
+|Synonym handling|Pre-built synonym dictionary + integration into search pipeline|
+|Typos handling|String similarity / fuzzy matching library|
+|Data ingestion|File parsing + normalizing + storing in DB/vector DB|
+|Hierarchical display|NCO dataset structure preserved|
+|Multilingual search|Translation model or multilingual embeddings|
+|Voice input|Speech-to-text API + search integration|
 
 ---
 
-### **3. Kill/Delay Risky Features**
+## **4. Definition of Done (DoD) – For MVP**
 
-- **Kill for MVP:**
-    
-    - OC2 Real-time Collaboration (high effort, sync complexity)
-    - OC3 Predictive Analytics (needs significant ML dev time)
-- **Delay for Post-MVP:**
-    
-    - OC1 Advanced Search Filters
-    - OC4 Multi-format Export
-
----
-
-### **4. Definition of Done (DoD) for Each Feature**
+For each must-have feature, here’s how we’ll know it’s done and judge-ready:
 
 |Feature|DoD|
 |---|---|
-|UC1 Authentication|User can sign up/login/logout securely, tested with 3 test accounts|
-|UC2 Data Upload|User can upload files, system stores & validates them, confirmed by DB entry|
-|UC3 Search & Retrieval|User can enter keyword/query and get relevant results in <2 seconds|
-|UC4 Visualization|User can generate chart/table from stored data with correct values|
-|UC5 Admin Management|Admin can update/delete records & changes are reflected in real time|
+|English text search|User can type any job title/description and get correct NCO codes|
+|Semantic search|Queries like "garment stitcher" return "Sewing Machine Operator"|
+|Synonym handling|“Tailor” and “Sewing machine operator” both lead to same code|
+|Ranked results|Top N results sorted by confidence|
+|Data ingestion|One-click ingestion of CSV/JSON updates search instantly|
+|Typos handling|Misspelling like “mechnic” still finds “Mechanic”|
+|Hierarchical display|Each result shows full NCO path|
+|UI|Search box, results list, basic styling|
 
 ---
 
-✅ **Phase 2 Output:**
+## **5. Risk Mitigation**
 
-- Clear priorities (P1 = build now, P2 = after MVP, Kill = ignore)
-- Dependencies mapped to avoid bottlenecks
-- Risky features removed from MVP
-- Each feature has a concrete “done” state to prevent scope creep
+- **Data parsing delays?** → Start with a pre-cleaned subset of NCO data to develop search first.
+- **Model performance bad?** → Keep a fallback to simple keyword search.
+- **Merge conflicts?** → Lock branching strategy early (covered in Phase 3).
+- **Time loss due to team skill gaps?** → Assign “critical path” tasks to strongest devs, safe tasks to beginners.
+
+
+---
+
+✅ **Phase 2 Deliverable:**  
+We now have **locked MVP scope**, **killed scope creep**, and **set clear done criteria**. No one can say “let’s add this one cool feature” without knowing it will hurt the finish line.
+
